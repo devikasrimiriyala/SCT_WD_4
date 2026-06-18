@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>SkillCraft To-Do Web App</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:20px;
+        }
+
+        .container{
+            width:100%;
+            max-width:700px;
+            background:#fff;
+            padding:30px;
+            border-radius:20px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .heading{
+            text-align:center;
+            color:#666;
+            margin-bottom:25px;
+        }
+
+        .input-section{
+            display:grid;
+            grid-template-columns: 1fr;
+            gap:15px;
+            margin-bottom:20px;
+        }
+
+        input{
+            padding:12px;
+            border:2px solid #ddd;
+            border-radius:10px;
+            font-size:16px;
+            outline:none;
+        }
+
+        input:focus{
+            border-color:#4facfe;
+        }
+
+        button{
+            padding:12px;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+            font-size:16px;
+            transition:0.3s;
+        }
+
+        .add-btn{
+            background:#4facfe;
+            color:white;
+            font-weight:bold;
+        }
+
+        .add-btn:hover{
+            background:#2196f3;
+        }
+
+        .task-list{
+            margin-top:20px;
+        }
+
+        .task{
+            background:#f5f7fa;
+            padding:15px;
+            border-radius:12px;
+            margin-bottom:15px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            flex-wrap:wrap;
+            gap:10px;
+        }
+
+        .task.completed{
+            background:#d4edda;
+            opacity:0.8;
+        }
+
+        .task-details{
+            flex:1;
+        }
+
+        .task-details h3{
+            color:#333;
+            margin-bottom:5px;
+        }
+
+        .task-details p{
+            color:#666;
+            font-size:14px;
+        }
+
+        .buttons{
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+
+        .complete-btn{
+            background:#28a745;
+            color:white;
+        }
+
+        .edit-btn{
+            background:#ffc107;
+            color:black;
+        }
+
+        .delete-btn{
+            background:#dc3545;
+            color:white;
+        }
+
+        .complete-btn:hover{
+            background:#1e7e34;
+        }
+
+        .edit-btn:hover{
+            background:#e0a800;
+        }
+
+        .delete-btn:hover{
+            background:#c82333;
+        }
+
+        @media(max-width:600px){
+            .task{
+                flex-direction:column;
+                align-items:flex-start;
+            }
+
+            .buttons{
+                width:100%;
+            }
+
+            .buttons button{
+                flex:1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        
+        <h1 class="heading">To-Do Web Application</h1>
+
+        <div class="input-section">
+
+            <input type="text" id="taskInput" placeholder="Enter Task">
+
+            <input type="datetime-local" id="taskDateTime">
+
+            <button class="add-btn" onclick="addTask()">
+                Add Task
+            </button>
+
+        </div>
+
+        <div class="task-list" id="taskList"></div>
+
+    </div>
+
+    <script>
+
+        function addTask() {
+
+            let taskInput = document.getElementById("taskInput");
+            let taskDateTime = document.getElementById("taskDateTime");
+
+            let taskText = taskInput.value.trim();
+            let taskTime = taskDateTime.value;
+
+            if(taskText === ""){
+                alert("Please enter a task");
+                return;
+            }
+
+            let taskList = document.getElementById("taskList");
+
+            let taskDiv = document.createElement("div");
+            taskDiv.classList.add("task");
+
+            taskDiv.innerHTML = `
+                <div class="task-details">
+                    <h3>${taskText}</h3>
+                    <p>${taskTime ? "Due: " + taskTime : "No Date & Time Set"}</p>
+                </div>
+
+                <div class="buttons">
+                    <button class="complete-btn" onclick="completeTask(this)">
+                        Complete
+                    </button>
+
+                    <button class="edit-btn" onclick="editTask(this)">
+                        Edit
+                    </button>
+
+                    <button class="delete-btn" onclick="deleteTask(this)">
+                        Delete
+                    </button>
+                </div>
+            `;
+
+            taskList.appendChild(taskDiv);
+
+            taskInput.value = "";
+            taskDateTime.value = "";
+        }
+
+        function completeTask(button){
+            let task = button.parentElement.parentElement;
+            task.classList.toggle("completed");
+        }
+
+        function deleteTask(button){
+            let task = button.parentElement.parentElement;
+            task.remove();
+        }
+
+        function editTask(button){
+
+            let task = button.parentElement.parentElement;
+
+            let title = task.querySelector("h3");
+            let date = task.querySelector("p");
+
+            let updatedTask = prompt("Edit Task", title.innerText);
+
+            if(updatedTask !== null && updatedTask.trim() !== ""){
+                title.innerText = updatedTask;
+            }
+
+            let updatedDate = prompt(
+                "Edit Date & Time",
+                date.innerText.replace("Due: ","")
+            );
+
+            if(updatedDate !== null && updatedDate.trim() !== ""){
+                date.innerText = "Due: " + updatedDate;
+            }
+        }
+
+    </script>
+
+</body>
+</html>
